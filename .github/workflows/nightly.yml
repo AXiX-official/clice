@@ -14,18 +14,27 @@ jobs:
       matrix:
         include:
           - os: windows-2025
-            artifact_name: clice.zip
-            symbol_artifact_name: clice-symbol.zip
+            artifact_name: clice
+            asset_name: clice-x64-windows-msvc
+            symbol_artifact_name: clice-symbol
+            symbol_asset_name: clice-x64-windows-msvc-symbol
+            ext_name: zip
             toolchain: clang-cl
 
           - os: ubuntu-24.04
-            artifact_name: clice.tar.gz
-            symbol_artifact_name: clice-symbol.tar.gz
+            artifact_name: clice
+            asset_name: clice-x86_64-linux-gnu
+            symbol_artifact_name: clice-symbol
+            symbol_asset_name: clice-x86_64-linux-gnu-symbol
+            ext_name: tar.gz
             toolchain: clang-20
 
           - os: macos-15
-            artifact_name: clice.tar.gz
-            symbol_artifact_name: clice-symbol.tar.gz
+            artifact_name: clice
+            asset_name: clice-arm64-macos-darwin
+            symbol_artifact_name: clice-symbol
+            symbol_asset_name: clice-arm64-macos-darwin-symbol
+            ext_name: tar.gz
             toolchain: clang
 
     runs-on: ${{ matrix.os }}
@@ -137,12 +146,12 @@ jobs:
         if: steps.check_commits.outputs.should_skip == 'false'
         uses: actions/upload-artifact@v4
         with:
-          name: clice-main-${{ matrix.os }}-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.sha_short }}
-          path: build/xpack/clice/${{ matrix.artifact_name }}
+          name: ${{ matrix.asset_name }}-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.sha_short }}.${{ matrix.ext_name }}
+          path: build/xpack/clice/${{ matrix.artifact_name }}.${{ matrix.ext_name }}
 
       - name: Upload Symbol Package Artifact
         if: steps.check_commits.outputs.should_skip == 'false'
         uses: actions/upload-artifact@v4
         with:
-          name: clice-symbol-${{ matrix.os }}-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.sha_short }}
-          path: build/xpack/clice/${{ matrix.symbol_artifact_name }}
+          name: ${{ matrix.symbol_asset_name }}-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.sha_short }}.${{ matrix.ext_name }}
+          path: build/xpack/clice/${{ matrix.symbol_artifact_name }}.${{ matrix.ext_name }}
