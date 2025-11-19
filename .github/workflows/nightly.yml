@@ -1,6 +1,7 @@
 name: nightly
 
 on:
+  workflow_dispatch:
   schedule:
     # Run at 11:00 UTC every day (19:00 CST)
     - cron: "0 11 * * *"
